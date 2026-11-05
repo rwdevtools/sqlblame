@@ -1,0 +1,42 @@
+name: Bug report
+description: A crash, a missing query, a wrong value, or an application that behaves differently with SQL Blame
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Issues here are public. **Do not paste anything that belongs to your employer or a client**: no source code,
+        class or package names, schemas, table names, SQL text, parameter values or screenshots that show them.
+        Describe the problem in general terms or reproduce it in a small project of your own.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you expected and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: ide
+    attributes:
+      label: IDE version
+      description: Help | About, "Copy and Close" (the first line is enough)
+    validations:
+      required: true
+  - type: input
+    id: plugin
+    attributes:
+      label: SQL Blame version
+      description: Settings | Plugins | Installed | SQL Blame
+    validations:
+      required: true
+  - type: input
+    id: setup
+    attributes:
+      label: Run type, Java version, framework, connection pool and database
+      description: e.g. "Gradle-delegated test, Java 21, Spring Boot 3.5 with JPA, HikariCP, PostgreSQL 17"
+  - type: textarea
+    id: log
+    attributes:
+      label: Error details
+      description: The error from the IDE's error dialog, or the lines with "SQL Blame" from Help | Show Log, without data of your own.
+      render: text

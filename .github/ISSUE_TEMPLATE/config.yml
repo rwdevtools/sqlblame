@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions by e-mail
+    url: mailto:rw.devtools@gmail.com
+    about: For questions, licensing or anything you do not want to post publicly.
+  - name: Documentation and FAQ
+    url: https://github.com/rwdevtools/sqlblame/blob/main/docs/faq.md
+    about: Answers to common questions before you open an issue.
