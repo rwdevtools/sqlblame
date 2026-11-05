@@ -5,21 +5,19 @@ run, debug or test it: with its real parameters, its execution time and row coun
 executed it. Works for any JDBC stack (JPA / Hibernate, MyBatis, JdbcTemplate, jOOQ, plain JDBC), with no changes to
 your project and no server.
 
-- **Real SQL, copy-ready.** Every execution with its parameters inlined and typed quoting, ready to paste into a
-  database console.
-- **Who ran it.** The call path of every query, with your own code in bold; one click opens the line that executed it.
-- **Grouped.** The same query with different parameters is one row with count, total and maximum time, so the
-  expensive and the chatty queries stand out.
-- **Context.** Spring transaction, Spring Batch job and step, and the thread, when present.
-- **Execution plans.** The plan of every query as a tree, a diagram or the database's own text, captured during the
-  run, so it is still there when a Testcontainers database is gone; Explain Analyze on demand
+- Copy-ready SQL: every execution with its parameters inlined and typed quoting, to paste into a database console.
+- The call path of every query, with your own code in bold. One click opens the line that executed it.
+- The same query with different parameters is one row with count, total and maximum time, so the expensive and the
+  chatty queries stand out.
+- Spring transaction, Spring Batch job and step, and the thread, when present.
+- The plan of every query as a tree, a diagram or the database's own text. It is captured during the run, so it is
+  still there when a Testcontainers database is gone, and Explain Analyze runs on demand
   ([docs/explain.md](docs/explain.md)).
-- **Any JDBC stack, any run.** Run, Debug and test runs from the IDE, runs delegated to Gradle and Maven goal runs
-  (`test`, `verify`, `spring-boot:run`). Applications on Java 8 or later.
-- **Already running applications.** **Attach SQL Blame...** loads the agent into a JVM started outside the IDE,
-  without a restart: on your computer directly, in a container or on another machine through its debug port
-  ([docs/attach.md](docs/attach.md)).
-- **Local only.** Nothing leaves your machine; parameter values can be masked.
+- Run, Debug and test runs from the IDE, runs delegated to Gradle and Maven goal runs (`test`, `verify`,
+  `spring-boot:run`), for applications on Java 8 or later.
+- **Attach SQL Blame...** loads the agent into an application that is already running, without a restart: on your
+  computer, in a container or on another machine through its debug port ([docs/attach.md](docs/attach.md)).
+- Nothing leaves your machine, and parameter values can be masked.
 
 ## Requirements
 
@@ -60,13 +58,13 @@ they pay nothing.
 
 ## Turning it off
 
-- **One click:** the **Capture SQL** check box in the SQL Blame tool window toolbar. While it is off, runs start
-  without the agent.
-- **Settings | Tools | SQL Blame:** the same switch, plus masking, the number of executions kept and the
-  application packages.
-- **Per run configuration:** the SQL Blame option in the run configuration editor: Default (follow Capture SQL),
-  Always or Never.
-- **Run with SQL Blame** (Run menu): while capture is off, runs the selected configuration once with the agent.
+One click on the **Capture SQL** check box in the SQL Blame tool window toolbar turns it off; while it is off, runs
+start without the agent. The same switch is in Settings | Tools | SQL Blame, next to masking, the number of
+executions kept and the application packages.
+
+For a single run configuration, its SQL Blame option in the run configuration editor can be Default (follow Capture
+SQL), Always or Never. While capture is off, **Run with SQL Blame** in the Run menu runs the selected configuration
+once with the agent.
 
 ## Cost of the agent
 
@@ -74,24 +72,24 @@ The agent adds work to your application, and we would rather tell you how much t
 2026-10-25 on a laptop CPU (AMD Ryzen 7 260) with the IDE receiving every query; your numbers depend on the machine,
 the JVM and how fast your database answers.
 
-- **Per query:** about 40-50 microseconds, mostly for recording which line of your code ran the query. Against a
-  database in Docker (1-1.5 ms per query) that is a few percent; against a very fast local database it is more
+- Each query costs about 40-50 microseconds, mostly for recording which line of your code ran it. Against a
+  database in Docker (1-1.5 ms per query) that is a few percent. Against a very fast local database it is more
   noticeable.
-- **Per JVM start:** about 0.2-0.25 s for the agent to start, plus about 0.1-0.3 s while a Spring Boot application
-  loads its classes: roughly +0.3-0.5 s per test JVM in total. About 2 MiB more retained heap and 8-10 MiB more
-  metaspace.
-- **Typical effect on a test suite:** with Postgres in Docker / Testcontainers, test time grows by about 7-10%; with a
-  very fast local database, by about 10-20%. Runs that execute little SQL mostly pay the startup cost.
-- **Runs without a database:** a run without a JDBC driver on its class path does not get the agent. Where the plugin
-  cannot see the class path in advance (runs delegated to Gradle), the agent only checks it and stops: about
-  10-45 ms per JVM start.
-- **When it is off:** the agent is not attached at all. When no IDE is listening to a run, the agent records nothing.
-- **Execution plans:** the EXPLAIN of each query's first execution added 0.1-1.8% to test time on top of the agent
-  (measured 2026-11-01, same machine); at most 2 000 plans and 5 s of EXPLAIN time per JVM. Switch it off in
+- Each JVM start takes about 0.2-0.25 s for the agent to start, plus about 0.1-0.3 s while a Spring Boot application
+  loads its classes: roughly +0.3-0.5 s per test JVM in total. The agent keeps about 2 MiB more heap and 8-10 MiB
+  more metaspace.
+- A test suite against Postgres in Docker / Testcontainers runs about 7-10% longer, against a very fast local
+  database about 10-20% longer. Runs that execute little SQL mostly pay the startup cost.
+- A run without a JDBC driver on its class path does not get the agent. Where the plugin cannot see the class path
+  in advance (runs delegated to Gradle), the agent only checks it and stops, which takes about 10-45 ms per JVM
+  start.
+- With capture off the agent is not attached at all, and when no IDE is listening to a run it records nothing.
+- Capturing the plan of each query's first execution added 0.1-1.8% to test time on top of the agent (measured
+  2026-11-01, same machine), with at most 2 000 plans and 5 s of EXPLAIN time per JVM. It can be switched off in
   Settings | Tools | SQL Blame | Explain plans.
-- **Attached to a running application:** the same cost per query as an agent started with the JVM (within 1.6%, 3.4%
-  when the events travel over the debug port; measured 2026-11-03). Loading takes about 0.5 s locally and about 1 s
-  remotely; the first 10 s after it run 2-5% slower while the JVM compiles the agent's code.
+- An agent attached to a running application costs the same per query as one started with the JVM (within 1.6%,
+  3.4% when the events travel over the debug port; measured 2026-11-03). Loading it takes about 0.5 s locally and
+  about 1 s remotely, and the first 10 s after that run 2-5% slower while the JVM compiles the agent's code.
 
 If the IDE cannot keep up, the agent drops events instead of slowing your application down; the Processes tab then
 says how many were dropped.

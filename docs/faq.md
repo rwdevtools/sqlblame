@@ -42,25 +42,24 @@ reads them without depending on them.
 
 ## What is not captured?
 
-- **Remote JVMs without a debug port.** An application on another machine, in Docker, WSL or on a remote run
-  target can be attached only through a JDWP debug port ([attach.md](attach.md)).
-- **Reactive drivers (R2DBC).** Only JDBC is captured.
-- **JDBC drivers in isolated class loaders** that do not delegate to the application class loader (JBoss Modules,
-  OSGi containers). The application works as usual, but its queries do not appear.
-- **Gradle tasks that run tests only as a dependency** of the task you started, e.g. `build` or `check` running
-  `test`. Run the test task (or the test from the gutter) itself.
-- **Short JVMs started without the IDE**, e.g. `./gradlew test` or `mvn test` in a terminal: they usually end
-  before there is time to attach. A long-running application started outside the IDE can be attached with **Attach
-  SQL Blame...**.
-- **Connections held since before an attach.** After **Attach SQL Blame...**, queries on a connection the
-  application opened earlier and still holds are not shown.
+- An application on another machine, in Docker, in WSL or on a remote run target, unless it has a JDWP debug port
+  you can reach ([attach.md](attach.md)).
+- Queries through reactive drivers (R2DBC). SQL Blame captures JDBC only.
+- JDBC drivers in isolated class loaders that do not delegate to the application class loader (JBoss Modules, OSGi
+  containers). The application works as usual, but its queries do not appear.
+- Tests that a Gradle task runs only as a dependency of the task you started, e.g. `build` or `check` running
+  `test`. Run the test task, or the test from the gutter, itself.
+- Short JVMs started without the IDE, e.g. `./gradlew test` or `mvn test` in a terminal. They usually end before
+  there is time to attach; a long-running application started outside the IDE can be attached with **Attach SQL
+  Blame...**.
+- Queries on a connection the application opened before an attach and still holds.
 
 ## What are the Maven specifics?
 
 - The agent is added to the JVMs Maven forks, not to Maven itself: surefire and failsafe test JVMs and the
   `spring-boot:run` application (`run`, `start` and `test-run` goals).
-- Your own `argLine` / `jvmArguments` keep working, including JaCoCo's `prepare-agent` and surefire's `@{argLine}`;
-  the agent is appended last.
+- Your own `argLine` / `jvmArguments` keep working, including JaCoCo's `prepare-agent` and surefire's `@{argLine}`,
+  and the agent is appended last.
 - Not captured: tests that run inside the Maven JVM (`forkCount=0`), other plugins that start JVMs (`exec:java`,
   `exec:exec`, Quarkus, Liquibase), Application run configurations delegated to Maven, and the classic Maven launcher
   (registry key `maven.use.scripts` switched off). Maven 4 is not tested yet.

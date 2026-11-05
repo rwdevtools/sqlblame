@@ -9,9 +9,9 @@ sure stays silent: SQL Blame prefers a missed issue over a false alarm.
 
 **Scope.** Several rules count executions "in one transaction". With the current agent the transaction is exact: the
 agent sees `commit`, `rollback` and the auto-commit mode of every connection, so two transactions are never mixed up,
-also when the same method runs twice in a row. Statements in auto-commit mode are each their own transaction; for the
-counting rules they form a *burst*: consecutive statements on one thread with at most one second between them;
-a statement of a transaction on that thread ends the burst.
+also when the same method runs twice in a row. Statements in auto-commit mode are each their own transaction. For the
+counting rules they form a *burst*: consecutive statements on one thread with at most one second between them. A
+statement of a transaction on that thread ends the burst.
 Queries from older agents fall back to an approximation (same thread, same Spring transaction, same connection).
 
 Each rule below has the same parts as its page in the IDE (**SQL Blame Rules** in the tool window's gear menu, or a
