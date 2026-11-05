@@ -33,7 +33,7 @@ your project and no server.
 3. Open the **SQL Blame** tool window (bottom). The **Queries** tab lists the queries of the run, grouped, most
    expensive first.
 4. Select a query to see the SQL with its parameters, its executions and the call path. **Copy SQL** copies the
-   selected execution with its parameters inlined; **Go to Caller** (or a double-click on a frame) opens your code.
+   selected execution with its parameters inlined, and **Go to Caller** (or a double-click on a frame) opens your code.
 5. **Explain Plan** in the SQL toolbar of a query's detail tab shows its execution plan.
 
 The first captured run shows a notification once, with links to turn capture off and to the settings.
@@ -58,7 +58,7 @@ they pay nothing.
 
 ## Turning it off
 
-One click on the **Capture SQL** check box in the SQL Blame tool window toolbar turns it off; while it is off, runs
+One click on the **Capture SQL** check box in the SQL Blame tool window toolbar turns it off. While it is off, runs
 start without the agent. The same switch is in Settings | Tools | SQL Blame, next to masking, the number of
 executions kept and the application packages.
 
@@ -69,7 +69,7 @@ once with the agent.
 ## Cost of the agent
 
 The agent adds work to your application, and we would rather tell you how much than let you find out. Measured on
-2026-10-25 on a laptop CPU (AMD Ryzen 7 260) with the IDE receiving every query; your numbers depend on the machine,
+2026-10-25 on a laptop CPU (AMD Ryzen 7 260) with the IDE receiving every query. Your numbers depend on the machine,
 the JVM and how fast your database answers.
 
 - Each query costs about 40-50 microseconds, mostly for recording which line of your code ran it. Against a
@@ -88,10 +88,10 @@ the JVM and how fast your database answers.
   2026-11-01, same machine), with at most 2 000 plans and 5 s of EXPLAIN time per JVM. It can be switched off in
   Settings | Tools | SQL Blame | Explain plans.
 - An agent attached to a running application costs the same per query as one started with the JVM (within 1.6%,
-  3.4% when the events travel over the debug port; measured 2026-11-03). Loading it takes about 0.5 s locally and
+  3.4% when the events travel over the debug port, measured 2026-11-03). Loading it takes about 0.5 s locally and
   about 1 s remotely, and the first 10 s after that run 2-5% slower while the JVM compiles the agent's code.
 
-If the IDE cannot keep up, the agent drops events instead of slowing your application down; the Processes tab then
+If the IDE cannot keep up, the agent drops events instead of slowing your application down, and the Processes tab then
 says how many were dropped.
 
 ## Privacy
@@ -101,7 +101,7 @@ says how many were dropped.
   your IDE, protected by the same kind of token but not encrypted, and the IDE sends the agent jar to the
   application through its debug port.
 - No telemetry, no analytics, no server of ours. SQL Blame makes no network calls of its own except the EXPLAIN
-  statements it sends to your application's database; licensing goes through the IDE's own JetBrains Marketplace
+  statements it sends to your application's database. Licensing goes through the IDE's own JetBrains Marketplace
   licensing.
 - Error reports: when SQL Blame causes an error in the IDE, the IDE's error dialog can send its stack trace to the
   plugin's page on JetBrains Marketplace. Nothing is sent unless you choose to send it there.
@@ -113,7 +113,8 @@ says how many were dropped.
   Blame, Run history ([FAQ](docs/faq.md#where-is-the-run-history-kept)).
 - Execution plans are kept with the run, in the history and in exported files. To explain a query again after the
   application ended, SQL Blame keeps the database login the application used (JDBC URL, user, password, driver) in
-  the IDE's password storage only, never in files or logs; turn it off or forget the logins in Settings | Tools |
+  the IDE's password storage only, never in files or logs. You can turn it off or forget the logins in Settings | Tools
+  |
   SQL Blame | Explain plans ([FAQ](docs/faq.md#which-login-does-explain-plan-use-after-the-run)).
 
 ## Limitations
@@ -130,9 +131,9 @@ license and have no expiry date.
 
 ## Support
 
-- Questions, bugs and ideas: [issues](https://github.com/rwdevtools/sqlblame/issues) (public; do not post data that
-  belongs to your employer or clients), or e-mail rw.devtools@gmail.com.
-- Errors in the IDE caused by SQL Blame can be sent from the IDE's error dialog; they reach the author through
+- Questions, bugs and ideas: [issues](https://github.com/rwdevtools/sqlblame/issues) (public, so do not post data that
+  belongs to your employer or clients) or e-mail rw.devtools@gmail.com.
+- Errors in the IDE caused by SQL Blame can be sent from the IDE's error dialog. They reach the author through
   JetBrains Marketplace.
 - Security problems: see [SECURITY.md](SECURITY.md).
 
@@ -140,4 +141,4 @@ license and have no expiry date.
 
 [End user license agreement](EULA.md) · [Privacy statement](PRIVACY.md) · [Changes](CHANGELOG.md)
 
-The source code of SQL Blame is not public; this repository holds its documentation and issue tracker.
+The source code of SQL Blame is not public. This repository holds its documentation and issue tracker.

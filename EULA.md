@@ -1,7 +1,8 @@
 # SQL Blame End User License Agreement
 
-Version 1.0, effective from the first release of SQL Blame. This agreement is between you (the person or the organization that uses SQL Blame) and Robert Weikert,
-running a sole proprietorship in Poland (the "Author"; contact: rw.devtools@gmail.com). The Author is the licensor of
+Version 1.0, effective from the first release of SQL Blame. This agreement is between you (the person or the
+organization that uses SQL Blame) and Robert Weikert,
+running a sole proprietorship in Poland (the "Author", contact: rw.devtools@gmail.com). The Author is the licensor of
 SQL Blame. JetBrains, which sells SQL Blame licenses through the JetBrains Marketplace, is not a party to this
 agreement. By installing or using SQL Blame you accept it.
 
@@ -56,14 +57,15 @@ are provided at the Author's discretion.
 To the extent the law allows, the Author is not liable for any direct or indirect costs, losses or damages arising
 from the use of SQL Blame, including lost profits, lost or damaged data, business interruption and consequential
 damage, and the Author's total liability is limited to the fees you paid for your SQL Blame license through the
-JetBrains Marketplace in the three months before the claim. JetBrains is not liable to you under this agreement in any way, as it is
+JetBrains Marketplace in the three months before the claim. JetBrains is not liable to you under this agreement in any
+way, as it is
 not a party to it. Nothing in this agreement limits liability that cannot be limited by law, such as liability for
 intentional damage, or the mandatory rights of consumers.
 
 ## 6. Term
 
 This agreement applies as long as you use SQL Blame. Your right to use it ends when your license or trial ends, or
-when you break this agreement; then stop using SQL Blame and remove it.
+when you break this agreement. Then stop using SQL Blame and remove it.
 
 ## 7. Changes
 

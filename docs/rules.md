@@ -1,8 +1,7 @@
 # SQL Blame rules
 
 SQL Blame checks every captured query against the rules below and marks the queries that break one (the Flags
-column, "Only flagged", the issues of a query's detail). The rules run in the IDE on what the agent captured; nothing
-is sent anywhere and the application is not slowed down by them.
+column, "Only flagged", the issues of a query's detail). The rules run in the IDE on what the agent captured. Nothing is sent anywhere and the application is not slowed down by them.
 
 Turn rules on or off and change their thresholds in **Settings | Tools | SQL Blame | Rules**. A rule that cannot be
 sure stays silent: SQL Blame prefers a missed issue over a false alarm.
@@ -19,15 +18,15 @@ click on a Flags icon): why it is an issue, how to fix it per stack, how SQL Bla
 
 ## Related SonarQube rules
 
-SonarQube checks source code; SQL Blame checks the statements that actually ran. Where a SonarQube rule covers the
+SonarQube checks source code, SQL Blame checks the statements that actually ran. Where a SonarQube rule covers the
 same problem, the table names it and says what SQL Blame does differently. Rule numbers refer to
 [rules.sonarsource.com](https://rules.sonarsource.com).
 
 | Rule | Related SonarQube rules | What SQL Blame does differently |
 |---|---|---|
-| SB002 Unbatched writes | [S6912](https://rules.sonarsource.com/java/RSPEC-6912/) (Java: batch processing in JDBC, a `Statement` executed in a loop) | Also catches `PreparedStatement` loops and the writes an ORM sends one by one; needs the threshold of executions with different values. |
-| SB005 Large result set | [S6905](https://rules.sonarsource.com/java/RSPEC-6905/) (Java), [S1499](https://rules.sonarsource.com/plsql/RSPEC-1499/) (PL/SQL): `SELECT *` | Counts the rows read, not the columns selected; a `SELECT *` alone is not marked. |
-| SB006 UPDATE / DELETE without WHERE | S1590 ([PL/SQL](https://rules.sonarsource.com/plsql/RSPEC-1590/), [T-SQL](https://rules.sonarsource.com/tsql/RSPEC-1590/)) | Checks the executed SQL, including SQL built at run time and framework bulk statements; exempts SQL Server temporary tables as the T-SQL rule does. |
+| SB002 Unbatched writes | [S6912](https://rules.sonarsource.com/java/RSPEC-6912/) (Java: batch processing in JDBC, a `Statement` executed in a loop) | Also catches `PreparedStatement` loops and the writes an ORM sends one by one, and needs the threshold of executions with different values. |
+| SB005 Large result set | [S6905](https://rules.sonarsource.com/java/RSPEC-6905/) (Java), [S1499](https://rules.sonarsource.com/plsql/RSPEC-1499/) (PL/SQL): `SELECT *` | Counts the rows read, not the columns selected. A `SELECT *` alone is not marked. |
+| SB006 UPDATE / DELETE without WHERE | S1590 ([PL/SQL](https://rules.sonarsource.com/plsql/RSPEC-1590/), [T-SQL](https://rules.sonarsource.com/tsql/RSPEC-1590/)) | Checks the executed SQL, including SQL built at run time and framework bulk statements, and exempts SQL Server temporary tables as the T-SQL rule does. |
 
 The other rules have no counterpart there: they depend on what only exists at run time (executions, parameter values,
 transactions, errors).
@@ -50,7 +49,7 @@ transactions, errors).
 <!-- rule SB001 -->
 ## SB001 N+1 select
 
-Severity: Major. Type: Performance. Tags: `n+1`, `jpa`, `mybatis`, `jooq`. Threshold: 5 executions (default; Settings | Tools | SQL Blame | Rules).
+Severity: Major. Type: Performance. Tags: `n+1`, `jpa`, `mybatis`, `jooq`. Threshold: 5 executions (default, set in Settings | Tools | SQL Blame | Rules).
 
 ### Why is this an issue?
 
@@ -163,7 +162,7 @@ compared, so the rule stays silent. The same values repeated are SB003, not SB00
 <!-- rule SB002 -->
 ## SB002 Unbatched writes
 
-Severity: Minor. Type: Performance. Tags: `batch`, `jdbc`, `jpa`, `spring-batch`. Threshold: 10 executions (default; Settings | Tools | SQL Blame | Rules).
+Severity: Minor. Type: Performance. Tags: `batch`, `jdbc`, `jpa`, `spring-batch`. Threshold: 10 executions (default, set in Settings | Tools | SQL Blame | Rules).
 
 ### Why is this an issue?
 
@@ -399,7 +398,7 @@ batches and failed executions are not compared.
 <!-- rule SB004 -->
 ## SB004 Slow query
 
-Severity: Major. Type: Performance. Tags: `index`, `sql`. Threshold: 100 ms (default; Settings | Tools | SQL Blame | Rules).
+Severity: Major. Type: Performance. Tags: `index`, `sql`. Threshold: 100 ms (default, set in Settings | Tools | SQL Blame | Rules).
 
 ### Why is this an issue?
 
@@ -465,7 +464,7 @@ Limits: the time includes the network and the JDBC driver, and the first executi
 <!-- rule SB005 -->
 ## SB005 Large result set
 
-Severity: Minor. Type: Performance. Tags: `paging`, `memory`, `sql`. Threshold: 1,000 rows (default; Settings | Tools | SQL Blame | Rules).
+Severity: Minor. Type: Performance. Tags: `paging`, `memory`, `sql`. Threshold: 1,000 rows (default, set in Settings | Tools | SQL Blame | Rules).
 
 ### Why is this an issue?
 
@@ -555,7 +554,7 @@ rule counts rows, not columns: a `SELECT *` with few rows is not marked.
 - [PostgreSQL: LIMIT and OFFSET](https://www.postgresql.org/docs/current/queries-limit.html)
 - [Spring Batch: Database item readers and writers](https://docs.spring.io/spring-batch/reference/readers-and-writers/database.html)
 - Related rules: SonarQube [S6905](https://rules.sonarsource.com/java/RSPEC-6905/) (SQL queries should retrieve only
-  the necessary fields) and [S1499](https://rules.sonarsource.com/plsql/RSPEC-1499/) for PL/SQL (`SELECT *`) look at the columns; SB005 looks at the rows.
+  the necessary fields) and [S1499](https://rules.sonarsource.com/plsql/RSPEC-1499/) for PL/SQL (`SELECT *`) look at the columns, SB005 looks at the rows.
 
 <!-- rule SB006 -->
 ## SB006 UPDATE / DELETE without WHERE
@@ -622,8 +621,7 @@ To empty a table on purpose, `TRUNCATE` states the intent, but it commits implic
 
 ### How SQL Blame detects it
 
-An UPDATE or DELETE (also after `WITH ...`) has no `WHERE` at the level of the statement itself; a WHERE inside a
-subquery does not count. Every statement of a `Statement` batch is checked.
+An UPDATE or DELETE (also after `WITH ...`) has no `WHERE` at the level of the statement itself. A WHERE inside a subquery does not count. Every statement of a `Statement` batch is checked.
 
 Source checks see the SQL written in the code. SQL Blame checks the SQL that ran, so it also sees statements built at
 run time and the SQL that frameworks generate: Spring Data's `deleteAllInBatch` runs `delete from <table>` and is
@@ -716,7 +714,7 @@ column) is not checked. A trigram index makes such a search fast, but the rule s
 <!-- rule SB008 -->
 ## SB008 Large IN list
 
-Severity: Minor. Type: Performance. Tags: `sql`, `jpa`, `statement-cache`. Threshold: 100 elements (default; Settings | Tools | SQL Blame | Rules).
+Severity: Minor. Type: Performance. Tags: `sql`, `jpa`, `statement-cache`. Threshold: 100 elements (default, set in Settings | Tools | SQL Blame | Rules).
 
 ### Why is this an issue?
 
@@ -765,7 +763,7 @@ Noncompliant: a list parameter with a different length every time.
 em.createQuery("select b from Book b where b.id in :ids", Book.class).setParameter("ids", ids);
 ```
 
-Compliant: a subquery or join that selects the rows in the database; for lists that must stay, padding keeps the
+Compliant: a subquery or join that selects the rows in the database. For lists that must stay, padding keeps the
 statement cache small.
 
 ```java
@@ -780,7 +778,7 @@ An `IN (...)` list of values in the executed SQL has at least 100 elements. `IN 
 In the source the list is one parameter (`in (:ids)`). SQL Blame sees the executed SQL after the framework expanded
 it, so it knows how long the list was.
 
-Limits: only value lists in the SQL text count; an array parameter is one value.
+Limits: only value lists in the SQL text count, and an array parameter is one value.
 
 ### Resources
 
@@ -897,12 +895,11 @@ rollback-only. An error that is caught and logged can hide data that was never w
 ### How to fix it
 
 Read the error in the detail. The SQLState class says where to look: class 23 (constraint violation) usually means a
-missing check before the write or a race between two writers; class 42 means a typo or a schema that does not match
-the code; 57014 is a statement timeout or cancel; class 08 is a lost connection.
+missing check before the write or a race between two writers. Class 42 means a typo or a schema that does not match the code, 57014 is a statement timeout or cancel, and class 08 is a lost connection.
 
 #### SQL (PostgreSQL)
 
-Noncompliant: check, then insert; a concurrent writer can insert the same key between the two statements (SQLState
+Noncompliant: check, then insert. A concurrent writer can insert the same key between the two statements (SQLState
 23505).
 
 ```sql
@@ -918,7 +915,7 @@ insert into tag (name) values (?) on conflict (name) do nothing;
 
 #### Spring
 
-Noncompliant: an exception swallowed inside the transaction; the transaction is already broken.
+Noncompliant: an exception swallowed inside the transaction, which is already broken.
 
 ```java
 @Transactional
@@ -943,7 +940,7 @@ for (Tag tag : tags) {
 The execution threw an exception that is not a lock conflict (SB009). The issue names the class of the error from its
 SQLState: integrity constraint violation (23), syntax error or undefined object (42), statement canceled or timed out
 (57014), connection error (08), data exception (22), transaction rolled back (40), invalid transaction state (25),
-feature not supported (0A); otherwise the exception's class name.
+feature not supported (0A), otherwise the exception's class name.
 
 Whether a statement fails is decided at run time. SQL Blame records every failed execution, also those the
 application catches and hides.

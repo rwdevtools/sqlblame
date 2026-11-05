@@ -8,8 +8,8 @@ was removed. While the database still exists, the plan can be explained again, o
 
 Open a query's detail tab (double-click a group on the Queries tab) and click **Explain Plan** in the toolbar of the
 SQL editor, next to Copy SQL and Open in SQL Scratch. A tab "Plan: <short SQL>" opens in the same row as the detail
-tabs. It behaves like a detail tab: close, rename, drag, open in a window of its own and move back. A query has at
-most one plan tab; opening it again from another execution makes that execution the one Re-run explains.
+tabs. It behaves like a detail tab: close, rename, drag, open in a window of its own and move back. A query has at most
+one plan tab. Opening it again from another execution makes that execution the one Re-run explains.
 
 The header says which database and version produced the plan, whether it is an **Estimated plan** or an **Actual
 plan (EXPLAIN ANALYZE)**, and where it comes from and when. Under it, one line names the query the plan belongs to:
@@ -17,8 +17,8 @@ its SQL (cut to fit, the whole SQL with values in the tooltip), the caller (clic
 the execution number within the query's group. The arrow at the start of the line shows the SQL with values, wrapped,
 up to eight lines with a scroll bar. Long values such as a 500-character string literal wrap here and in the details
 panel instead of widening the tab.
-The summary strip below shows total cost, estimated rows and planning time; actual plans add actual rows, execution
-time and buffers. On the right of the strip, one badge per kind of problem found in the plan (see below); a click
+The summary strip below shows total cost, estimated rows and planning time, and actual plans add actual rows, execution
+time and buffers. On the right of the strip, one badge per kind of problem found in the plan (see below). A click
 selects the next step that has it.
 
 ## Where a plan comes from
@@ -58,7 +58,7 @@ Measured on the author's test projects, plan capture adds 0.1% to 1.8% to test t
 
 ### Re-run, during and after the run
 
-**Re-run** asks for a new estimated plan, with a 15 s limit; the query is not run. While the application runs, its
+**Re-run** asks for a new estimated plan, with a 15 s limit, and the query is not run. While the application runs, its
 agent explains the execution on a new read-only connection straight from the JDBC driver, outside the application's
 pool, and rolls back at the end. Once the application has ended, the **Explain Worker** does the same. It is a small
 Java process the plugin starts with the project's JDK (or the IDE's runtime without a project SDK) and the
@@ -83,20 +83,21 @@ database's or the worker's own message sits behind **Details** when it is short,
 **Explain Analyze** runs the query to measure it and shows the actual plan: real row counts, times, loops and, on
 PostgreSQL, buffers. Because it runs the query, SQL Blame only does it when you click it, and only for a `SELECT`
 without `FOR UPDATE`, `FOR SHARE` or lock hints. It runs in a read-only transaction that is rolled back, with a time
-limit of 30 s (Settings). The first time, a dialog asks for confirmation. **Cancel** stops a running request; closing
-the tab cancels it too. It still costs what the query costs: it can take as long as it does in the application, and
+limit of 30 s (Settings). The first time, a dialog asks for confirmation. **Cancel** stops a running request, and
+closing the tab cancels it too. It still costs what the query costs: it can take as long as it does in the application,
+and
 the database does the same work.
 
 ## Views
 
-The **Tree** view (the default) has one row per step with Operation, Object, Est. rows, Cost and % of cost (the
-step's own cost over the plan's); actual plans add Actual rows, Actual time, Loops and Buffers. The costliest step is
+The **Tree** view (the default) has one row per step with Operation, Object, Est. rows, Cost and % of cost (the step's
+own cost over the plan's). Actual plans add Actual rows, Actual time, Loops and Buffers. The costliest step is
 bold, and actual rows 10 or more times off the estimate are marked. Expand All, Collapse All and Go to Costliest Step
 are in the toolbar.
 
 The **Diagram** draws each step as a card with an edge to the step that uses its rows, left to right or top down.
 Thicker edges carry more rows, and a card's background gets warmer the larger its share of the cost. Ctrl+mouse
-wheel zooms and dragging pans. A click on a card's handle hides its inputs; a minimap appears when the plan does not
+wheel zooms and dragging pans. A click on a card's handle hides its inputs, and a minimap appears when the plan does not
 fit. Export PNG... saves the picture.
 
 **Text** shows the database's own plan text in a read-only editor, with the raw JSON, XML or output in a second tab.
@@ -141,7 +142,7 @@ keeps many rows. SQLite reports no row counts, so its plans get no row-based hin
 | SQLite | `EXPLAIN QUERY PLAN` | - | SQLite 3.54 |
 | Db2 | `EXPLAIN PLAN FOR` | - | No (written from IBM's documentation) |
 
-Db2 plans need the explain tables; SQL Blame never creates them (`SYSPROC.SYSINSTALLOBJECTS` does). Derby and other
+Db2 plans need the explain tables, which SQL Blame never creates (`SYSPROC.SYSINSTALLOBJECTS` does). Derby and other
 databases get a message: open the query with **Open in SQL Scratch** and use the IDE's own Explain Plan with a data
 source of yours.
 
@@ -163,11 +164,11 @@ documentation, and the versions SQL Blame is tested against.
 | YugabyteDB | every YSQL version | every YSQL version | No | YSQL is built on PostgreSQL 11 or later |
 | MySQL | 5.6.5 | 8.0.18 | 8.4 | [EXPLAIN in 5.6](https://dev.mysql.com/doc/refman/5.6/en/explain.html) (`FORMAT=JSON`), [EXPLAIN ANALYZE in 8.0](https://dev.mysql.com/doc/refman/8.0/en/explain.html#explain-analyze) |
 | MariaDB | 10.1.2 | 10.1.2 | 11.4 | [EXPLAIN FORMAT=JSON](https://mariadb.com/kb/en/explain-format-json/), [ANALYZE FORMAT=JSON](https://mariadb.com/kb/en/analyze-format-json/) |
-| Oracle | 10g Release 2 (10.2) | 10g Release 2 (10.2) | Free 23 | [DBMS_XPLAN in 10.2](https://docs.oracle.com/cd/B19306_01/appdev.102/b14258/d_xplan.htm) (`DISPLAY`, `DISPLAY_CURSOR`, `ALLSTATS LAST`); `PLAN_TABLE.OTHER_XML` exists from 10.2 |
+| Oracle | 10g Release 2 (10.2) | 10g Release 2 (10.2) | Free 23 | [DBMS_XPLAN in 10.2](https://docs.oracle.com/cd/B19306_01/appdev.102/b14258/d_xplan.htm) (`DISPLAY`, `DISPLAY_CURSOR`, `ALLSTATS LAST`). `PLAN_TABLE.OTHER_XML` exists from 10.2 |
 | SQL Server | 2005 | 2005 | 2022 | [SET SHOWPLAN_XML](https://learn.microsoft.com/en-us/sql/t-sql/statements/set-showplan-xml-transact-sql), [SET STATISTICS XML](https://learn.microsoft.com/en-us/sql/t-sql/statements/set-statistics-xml-transact-sql) (both added in 2005) |
-| H2 | 2.0 | 2.0 | 2.3.232 | Plan text of H2 2.x; 1.4 is not tested |
+| H2 | 2.0 | 2.0 | 2.3.232 | Plan text of H2 2.x (1.4 not tested) |
 | HSQLDB | 2.0 | - | 2.7.4 | `EXPLAIN PLAN FOR` in the [HSQLDB 2 guide](https://hsqldb.org/doc/2.0/guide/) |
-| SQLite | 3.24.0 | - | 3.54.1 | [EXPLAIN QUERY PLAN](https://www.sqlite.org/eqp.html) rows with `id` and `parent` since [3.24.0](https://www.sqlite.org/releaselog/3_24_0.html); the version is the one inside the `sqlite-jdbc` driver |
+| SQLite | 3.24.0 | - | 3.54.1 | [EXPLAIN QUERY PLAN](https://www.sqlite.org/eqp.html) rows with `id` and `parent` since [3.24.0](https://www.sqlite.org/releaselog/3_24_0.html). The version is the one inside the `sqlite-jdbc` driver |
 | Db2 for Linux, UNIX and Windows | 11.5 | - | No | [EXPLAIN](https://www.ibm.com/docs/en/db2/11.5?topic=statements-explain) and the explain tables of 11.5 |
 
 When the driver reports a PostgreSQL, MySQL, MariaDB, Oracle, SQL Server or SQLite version older than the table's,
@@ -179,7 +180,7 @@ Some features need newer versions:
 
 - Plans with masked parameter values (a generic plan): PostgreSQL 12 and later, which has `plan_cache_mode`
   ([12](https://www.postgresql.org/docs/12/runtime-config-query.html#GUC-PLAN-CACHE-MODE)). Not on YugabyteDB.
-- The lock wait limit on PostgreSQL (`lock_timeout`) exists from 9.3; on 9.0-9.2 only the statement time limit
+- The lock wait limit on PostgreSQL (`lock_timeout`) exists from 9.3. On 9.0-9.2 only the statement time limit
   applies.
 
 ## Logins
@@ -210,8 +211,8 @@ The dialog asks for a name, the JDBC URL, user, password and the JDBC driver's j
 is filled in with what the agent saw for that query's database: the URL, user and driver jars, and the password when
 a login is kept. **Test Connection** connects through the Explain Worker and names the database it reached. The
 connection is kept like the automatic logins: URL, user, password and driver jars in the IDE's password storage,
-and only the name in the SQL Blame settings file. **Forget Stored Logins** and **Clear History** leave these
-connections alone; remove them in the settings list.
+and only the name in the SQL Blame settings file. **Forget Stored Logins** and **Clear History** leave these connections
+alone. Remove them in the settings list.
 
 A connection you save in a plan tab explains the query right away. It is also chosen for that query's database:
 when Re-run finds no kept login for it, or the kept login can no longer connect, the worker uses that connection (the
@@ -226,15 +227,15 @@ same time limits, and Explain Analyze for SELECT only.
 ## Plans in run files and the history
 
 Plans are saved with the run: in memory, in the run history and in exported `.sqlblame` files. With them goes a hash
-of the JDBC URL and user of their database, never the URL, user or password themselves. An exported run opened
-elsewhere shows its plans; Re-run there works only if that IDE has a login for the same database or a connection
+of the JDBC URL and user of their database, never the URL, user or password themselves. An exported run opened elsewhere
+shows its plans. Re-run there works only if that IDE has a login for the same database or a connection
 chosen for it. With **Mask parameter values** on, saved runs and
 exports leave out the plans of executions that had values, because a plan can contain them.
 
 ## Masked parameter values
 
 With **Mask parameter values** on, the agent has no values to explain with. PostgreSQL 12 and later get a generic
-plan instead (one the database makes without knowing the values); Oracle, HSQLDB and Db2 do not use values for an
+plan instead (one the database makes without knowing the values). Oracle, HSQLDB and Db2 do not use values for an
 estimated plan anyway. Other databases say that the values are masked.
 
 ## Settings
@@ -247,10 +248,10 @@ Settings | Tools | SQL Blame, section **Explain plans**:
 | Plans per JVM | 2 000 |
 | EXPLAIN time per JVM (s) | 5 |
 | Time limit of Explain Analyze (s) | 30 |
-| Ask before Explain Analyze runs a query | on; the first confirmation turns it off |
+| Ask before Explain Analyze runs a query | on (the first confirmation turns it off) |
 | Reuse application logins to explain queries after a run | on |
 | Forget Stored Logins | button |
-| Database connections for Explain Plan | none; add, edit, test and remove (saved at once) |
+| Database connections for Explain Plan | none (add, edit, test and remove, saved at once) |
 
 With capture off, nothing is explained during the run, and Re-run while the application runs is answered by the
 worker, which needs a kept login.
