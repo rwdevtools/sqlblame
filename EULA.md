@@ -18,12 +18,16 @@ documentation, in every version, including updates.
    payment, renewal and refunds are governed by the JetBrains Marketplace terms between you and JetBrains.
 2. With a valid license or during the free trial, the Author grants you a limited, non-exclusive, non-transferable,
    worldwide right to install and use SQL Blame within the limits of the Confirmation and its documentation, for any
-   lawful purpose, including commercial work, and to keep backup copies for archival purposes.
+   lawful purpose, including commercial work, and to keep backup copies for archival purposes. SQL Blame is
+   licensed, not sold. The number of people using it at the same time may not exceed the number of users you
+   bought.
 3. Beta builds are provided free of charge for evaluation; a later version may need a license.
 4. Without the Author's written permission you may not sell, rent, sublicense or redistribute SQL Blame, remove or
    work around its license check, or modify, decompile, disassemble or reverse-engineer it or create derivative works
    of it, except to the extent the law allows this regardless of this agreement.
 5. SQL Blame and all rights in it stay with the Author. Everything not expressly granted here is reserved.
+6. The Author may change the features, the price and these terms for future versions and may end development or
+   support. A license you already paid for keeps the rights stated in its Confirmation.
 
 ## 3. Your applications and your data
 

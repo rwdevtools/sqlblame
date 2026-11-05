@@ -6,7 +6,8 @@ body:
     attributes:
       value: |
         Issues here are public. **Do not paste anything that belongs to your employer or a client**: no source code,
-        class or package names, schemas, table names, SQL text, parameter values or screenshots that show them.
+        class or package names, schemas, table names, SQL text, parameter values or screenshots that show them, and
+        never passwords, credentials or license keys.
         Describe the problem in general terms or reproduce it in a small project of your own.
   - type: textarea
     id: what
@@ -18,8 +19,8 @@ body:
   - type: input
     id: ide
     attributes:
-      label: IDE version
-      description: Help | About, "Copy and Close" (the first line is enough)
+      label: IDE version and operating system
+      description: Help | About, "Copy and Close" (the first lines are enough), e.g. "IntelliJ IDEA 2026.2.3, Windows 11"
     validations:
       required: true
   - type: input
