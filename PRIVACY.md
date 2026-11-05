@@ -38,6 +38,26 @@ application, so the values never reach the IDE.
 - Issues you open in this repository and e-mails you send are public or read by the author, respectively; do not
   include data that belongs to your employer or your clients.
 
-## Questions
+## Data you send to the author
 
-Write to rw.devtools@gmail.com.
+The author (Robert Weikert, sole proprietorship in Poland, rw.devtools@gmail.com) does not receive or process the
+data SQL Blame captures in your environment; you control it. The author is the controller only of what you send
+yourself:
+
+- e-mails to rw.devtools@gmail.com and issues or comments in this repository (your name or user name, e-mail address
+  and what you write), and
+- error reports you send from the IDE (the stack trace and the IDE and plugin versions, delivered through JetBrains
+  Marketplace).
+
+They are used only to answer you, to fix errors and to improve SQL Blame (legal basis: legitimate interest, Art.
+6(1)(f) GDPR), and kept as long as needed for that and for the history of the product. Issues are public on GitHub
+under GitHub's terms. Licensing and payments are handled by JetBrains as the seller, under JetBrains' privacy policy.
+The author receives the sales reports JetBrains provides to plugin vendors.
+
+You can ask for access to, correction or deletion of your data, restrict or object to its use, and lodge a complaint
+with a data protection authority (in Poland: Prezes Urzędu Ochrony Danych Osobowych).
+
+## Changes and questions
+
+This statement may change with new versions of SQL Blame; the current version is the one in this repository. Write
+to rw.devtools@gmail.com with any question.
