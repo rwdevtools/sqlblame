@@ -1,8 +1,9 @@
 # SQL Blame End User License Agreement
 
 Version 1.0. This agreement is between you (the person or the organization that uses SQL Blame) and Robert Weikert,
-running a sole proprietorship in Poland (the "Author"; contact: rw.devtools@gmail.com). By installing or using SQL
-Blame you accept it.
+running a sole proprietorship in Poland (the "Author"; contact: rw.devtools@gmail.com). The Author is the licensor of
+SQL Blame. JetBrains, which sells SQL Blame licenses through the JetBrains Marketplace, is not a party to this
+agreement. By installing or using SQL Blame you accept it.
 
 ## 1. The software
 
@@ -12,13 +13,16 @@ documentation, in every version, including updates.
 ## 2. License
 
 1. You buy a license for SQL Blame through the JetBrains Marketplace. The license type (personal or commercial), the
-   number of users and the term are those of your purchase there. The purchase itself, payment, renewal and refunds
-   are governed by the JetBrains Marketplace terms between you and JetBrains.
-2. With a valid license or during the free trial, the Author grants you a non-exclusive, non-transferable right to
-   install and use SQL Blame for that license, for any lawful purpose, including commercial work.
+   number of users, the subscription period (monthly or annual) and any perpetual fallback license are those stated
+   in the confirmation e-mail JetBrains sends you for the purchase (the "Confirmation"). The purchase itself,
+   payment, renewal and refunds are governed by the JetBrains Marketplace terms between you and JetBrains.
+2. With a valid license or during the free trial, the Author grants you a limited, non-exclusive, non-transferable,
+   worldwide right to install and use SQL Blame within the limits of the Confirmation and its documentation, for any
+   lawful purpose, including commercial work, and to keep backup copies for archival purposes.
 3. Beta builds are provided free of charge for evaluation; a later version may need a license.
-4. You may not sell, rent, sublicense or redistribute SQL Blame, remove or work around its license check, or
-   decompile or modify it, except to the extent the law allows this regardless of this agreement.
+4. Without the Author's written permission you may not sell, rent, sublicense or redistribute SQL Blame, remove or
+   work around its license check, or modify, decompile, disassemble or reverse-engineer it or create derivative works
+   of it, except to the extent the law allows this regardless of this agreement.
 5. SQL Blame and all rights in it stay with the Author. Everything not expressly granted here is reserved.
 
 ## 3. Your applications and your data
@@ -31,15 +35,18 @@ documentation, in every version, including updates.
 
 ## 4. No warranty
 
-SQL Blame is provided "as is". The Author does not warrant that it is free of errors, that it captures every query
-or that its numbers and findings are complete or correct. Check its findings before you act on them.
+SQL Blame is provided "as is" and "as available", without implied warranties. The Author does not warrant that it is
+free of errors or viruses, that it runs without interruption, that errors will be corrected, that it captures every
+query or that its numbers and findings are complete or correct. Check its findings before you act on them. Updates
+are provided at the Author's discretion.
 
 ## 5. Limitation of liability
 
 To the extent the law allows, the Author is not liable for indirect or consequential damage, lost profits, lost data
 or business interruption, and the Author's total liability is limited to the amount you paid for your SQL Blame
-license in the 12 months before the claim. Nothing in this agreement limits liability that cannot be limited by law,
-such as liability for intentional damage, or the mandatory rights of consumers.
+license in the 12 months before the claim. JetBrains is not liable to you under this agreement in any way, as it is
+not a party to it. Nothing in this agreement limits liability that cannot be limited by law, such as liability for
+intentional damage, or the mandatory rights of consumers.
 
 ## 6. Term
 
