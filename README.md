@@ -10,6 +10,12 @@ your project and no server.
 - The same query with different parameters is one row with count, total and maximum time, so the expensive and the
   chatty queries stand out.
 - Spring transaction, Spring Batch job and step, and the thread, when present.
+- The transaction behind every query: committed or rolled back and why, who opened it with which propagation, the
+  Hibernate flush that sent the statement and the entity change behind it, and every transaction of a run on a
+  timeline. Rules flag unexpected rollbacks, `@Transactional` that did not apply, `LazyInitializationException` and
+  other traps. Covers Spring transactions, Hibernate 5.6-7, Spring Batch 4-6, JTA with Narayana or Atomikos, CDI
+  `@Transactional`, and work handed to `@Async` methods and Spring executors and schedulers
+  ([docs/transactions.md](docs/transactions.md)).
 - The plan of every query as a tree, a diagram or the database's own text. It is captured during the run, so it is
   still there when a Testcontainers database is gone, and Explain Analyze runs on demand
   ([docs/explain.md](docs/explain.md)).
@@ -90,6 +96,10 @@ the JVM and how fast your database answers.
 - An agent attached to a running application costs the same per query as one started with the JVM (within 1.6%,
   3.4% when the events travel over the debug port, measured 2026-11-03). Loading it takes about 0.5 s locally and
   about 1 s remotely, and the first 10 s after that run 2-5% slower while the JVM compiles the agent's code.
+- The transaction history, with everything on, added 0-3.8 percentage points to test time in short test JVMs (most
+  against a fast local database), and 1.5% to a running Hibernate application, 3.0% after an attach (measured
+  2026-11-18). The history, or only its Hibernate part, can be switched off in Settings | Tools | SQL Blame
+  ([docs/transactions.md](docs/transactions.md#cost)).
 
 If the IDE cannot keep up, the agent drops events instead of slowing your application down, and the Processes tab then
 says how many were dropped.
@@ -107,15 +117,15 @@ says how many were dropped.
   plugin's page on JetBrains Marketplace. Nothing is sent unless you choose to send it there.
 - **Mask parameter values** (Settings | Tools | SQL Blame) replaces every value with `***` inside your application
   for runs started afterwards, and in the tool window at once. Copied SQL then contains `'***'` instead of values.
+  The transaction history then leaves out entity ids and exception messages, which may contain values too.
 - Captured queries live in the IDE's memory (by default the newest 50 000 executions per project). Finished runs are
   also saved in a run history in the IDE's system directory, never in your project (at most 100 runs and 1 024 MB
   per project by default), so they survive closing the IDE. Switch it off or clear it in Settings | Tools | SQL
   Blame, Run history ([FAQ](docs/faq.md#where-is-the-run-history-kept)).
 - Execution plans are kept with the run, in the history and in exported files. To explain a query again after the
   application ended, SQL Blame keeps the database login the application used (JDBC URL, user, password, driver) in
-  the IDE's password storage only, never in files or logs. You can turn it off or forget the logins in Settings | Tools
-  |
-  SQL Blame | Explain plans ([FAQ](docs/faq.md#which-login-does-explain-plan-use-after-the-run)).
+  the IDE's password storage only, never in files or logs. You can turn it off or forget the logins in
+  Settings | Tools | SQL Blame | Explain plans ([FAQ](docs/faq.md#which-login-does-explain-plan-use-after-the-run)).
 
 ## Limitations
 
@@ -123,6 +133,12 @@ Remote JVMs without a debug port, reactive drivers (R2DBC), JDBC drivers in isol
 that run tests only as a dependency and some Maven setups are not captured. After an attach, connections the
 application opened earlier and still holds are not captured either. Details and workarounds: [FAQ](docs/faq.md) and
 [docs/attach.md](docs/attach.md).
+
+The transaction history links an `@Async` method to its transaction on every executor. A task given to an executor
+directly is linked only when Spring code runs around it on the worker thread, so not for `new Thread`,
+`CompletableFuture`, a plain JDK executor or Spring Boot's executor on virtual threads. JTA scopes show the timeout as
+their only attribute. CDI `@Transactional` was tested in Weld SE with Narayana, not in Quarkus or an application
+server. The full list is in [docs/transactions.md](docs/transactions.md#what-is-not-covered).
 
 ## License and price
 
@@ -133,12 +149,14 @@ license and have no expiry date.
 
 - Questions, bugs and ideas: [issues](https://github.com/rwdevtools/sqlblame/issues) (public, so do not post data that
   belongs to your employer or clients) or e-mail rw.devtools@gmail.com.
+- Answers: within two working days for a problem that stops your work, within five working days for everything else.
 - Errors in the IDE caused by SQL Blame can be sent from the IDE's error dialog. They reach the author through
   JetBrains Marketplace.
 - Security problems: see [SECURITY.md](SECURITY.md).
 
 ## Legal
 
-[End user license agreement](EULA.md) · [Privacy statement](PRIVACY.md) · [Changes](CHANGELOG.md)
+[End user license agreement](EULA.md) · [Privacy statement](PRIVACY.md) · [Third-party notices](THIRD-PARTY-NOTICES.txt) ·
+[Changes](CHANGELOG.md)
 
 The source code of SQL Blame is not public. This repository holds its documentation and issue tracker.

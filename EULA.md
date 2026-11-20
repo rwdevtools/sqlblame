@@ -1,10 +1,10 @@
 # SQL Blame End User License Agreement
 
 Version 1.0, effective from the first release of SQL Blame. This agreement is between you (the person or the
-organization that uses SQL Blame) and Robert Weikert,
-running a sole proprietorship in Poland (the "Author", contact: rw.devtools@gmail.com). The Author is the licensor of
-SQL Blame. JetBrains, which sells SQL Blame licenses through the JetBrains Marketplace, is not a party to this
-agreement. By installing or using SQL Blame you accept it.
+organization that uses SQL Blame) and Robert Weikert, running a sole proprietorship in Poland (the "Author", contact:
+rw.devtools@gmail.com). The Author is the licensor of SQL Blame. JetBrains s.r.o. and its affiliates ("JetBrains"), which
+sell SQL Blame licenses through the JetBrains Marketplace, and the resellers of JetBrains products are not parties to
+this agreement. By installing or using SQL Blame you accept it.
 
 ## 1. The software
 
@@ -13,10 +13,11 @@ documentation, in every version, including updates.
 
 ## 2. License
 
-1. You buy a license for SQL Blame through the JetBrains Marketplace. The license type (personal or commercial), the
-   number of users, the subscription period (monthly or annual) and any perpetual fallback license are those stated
-   in the confirmation e-mail JetBrains sends you for the purchase (the "Confirmation"). The purchase itself,
-   payment, renewal and refunds are governed by the JetBrains Marketplace terms between you and JetBrains.
+1. You buy a license for SQL Blame through the JetBrains Marketplace or from a reseller of JetBrains products. The
+   license type (personal or commercial), the number of users, the subscription period (monthly or annual) and any
+   perpetual fallback license are those stated in the confirmation e-mail JetBrains sends you for the purchase (the
+   "Confirmation"). The purchase itself, payment, renewal and refunds are governed by the terms between you and
+   JetBrains or the reseller.
 2. With a valid license or during the free trial, the Author grants you a limited, non-exclusive, non-transferable,
    worldwide right to install and use SQL Blame within the limits of the Confirmation and its documentation, for any
    lawful purpose, including commercial work, and to keep backup copies for archival purposes. SQL Blame is
@@ -31,6 +32,9 @@ documentation, in every version, including updates.
 5. SQL Blame and all rights in it stay with the Author. Everything not expressly granted here is reserved.
 6. The Author may change the features, the price and these terms for future versions and may end development or
    support. A license you already paid for keeps the rights stated in its Confirmation.
+7. SQL Blame contains open-source libraries (Byte Buddy and ASM) that are licensed under their own licenses. They are
+   listed with their license texts in `THIRD-PARTY-NOTICES.txt` in the plugin's `lib` folder. This agreement does not
+   limit your rights to those libraries under their licenses.
 
 ## 3. Your applications and your data
 
@@ -56,16 +60,16 @@ are provided at the Author's discretion.
 
 To the extent the law allows, the Author is not liable for any direct or indirect costs, losses or damages arising
 from the use of SQL Blame, including lost profits, lost or damaged data, business interruption and consequential
-damage, and the Author's total liability is limited to the fees you paid for your SQL Blame license through the
-JetBrains Marketplace in the three months before the claim. JetBrains is not liable to you under this agreement in any
-way, as it is
-not a party to it. Nothing in this agreement limits liability that cannot be limited by law, such as liability for
+damage, and the Author's total liability is limited to the fees paid for your SQL Blame license, through the JetBrains
+Marketplace or a reseller, in the three months before the claim. JetBrains and the resellers of JetBrains products are
+not liable to you under this agreement in any way, as they are not parties to it. Nothing in this agreement limits liability that cannot be limited by law, such as liability for
 intentional damage, or the mandatory rights of consumers.
 
 ## 6. Term
 
 This agreement applies as long as you use SQL Blame. Your right to use it ends when your license or trial ends, or
-when you break this agreement. Then stop using SQL Blame and remove it.
+when you break this agreement. Then stop using SQL Blame and remove it. A perpetual fallback license stated in your
+Confirmation stays in force for the version it covers, as long as you keep to this agreement.
 
 ## 7. Changes
 

@@ -4,7 +4,7 @@
 
 ## [Unreleased]
 
-First beta.
+SQL Blame 1.0, the first release.
 
 ### Added
 - SQL Blame tool window: the Queries tab groups the queries of a run by normalized SQL with count, total and maximum
@@ -65,3 +65,31 @@ First beta.
 - Saved remote targets and Test Connection, one confirmation before the first remote attach, and Settings | Tools | SQL
   Blame | Attach.
 - Run files version 3 with where a run was attached (versions 1 and 2 still open).
+- Transaction history (`docs/transactions.md`), on by default: Transaction in the query detail opens a tab with the
+  run's timeline zoomed on the selected execution's transaction, its outcome and cause, the scope tree (propagation, isolation, read-only, timeout, rollback rules)
+  and the transaction's events, for Spring transactions, Spring Batch chunks, standalone JTA (Narayana, Atomikos),
+  CDI `@Transactional` and, without Spring, the connection's own commit and rollback.
+- JTA synchronizations in the transaction history: statements from `beforeCompletion` stay in the transaction, those
+  from `afterCompletion` are marked as running after it.
+- Hibernate in the transaction history: the entity action behind each statement (entity, id, dirty properties), the
+  call that scheduled it, the flush that sent it and why, and the flush plan.
+- `LazyInitializationException` with the query that loaded the entity (found through Hibernate's own table mapping),
+  the end of its transaction and fix options to copy (`@EntityGraph`, `JOIN FETCH`, a transaction, a DTO
+  projection), one block per association with the number of accesses. Apply with a diff preview for `@EntityGraph`
+  and the transaction; a Spring Data method the repository inherits, such as `findById`, is declared again in the
+  repository interface.
+- Transactions tab: every transaction of a run on a timeline, one lane per thread, nested scopes, `@Async` methods and
+  tasks of Spring's executors and schedulers (also with a `TaskDecorator`) linked to the transaction they were
+  started in, lock candidates, Spring Batch step summaries; a double-click shows the transaction's queries. The event
+  list has a Flags column with the transaction rules per line, and the timeline can move to a separate window while
+  the details stay in SQL Blame.
+- Rules SB011-SB022 on transactions: unexpected rollback, write outside the transaction, `@Transactional` that did not
+  apply, long transaction, write in a read-only transaction, `REQUIRES_NEW` in a loop, committed despite an exception,
+  lazy loading after the session closed, Open Session in View, write after commit, unique violation from the flush
+  order, write in a task started inside a transaction.
+- Inspection "@Transactional method called on this" for Java and Kotlin, with its own message for final methods;
+  silent where JetBrains' Spring inspection for the same call is enabled.
+- Rolled back icon in the Flags column, Only rolled back filter, and the outcome in the Executions table.
+- Settings Record transaction history and Include Hibernate entity actions and flushes, both on by default. Run files
+  version 4 with the transaction history (versions 1-3 still open).
+- Queries of MariaDB Connector/J 3 and of SQL Server's XA connections are captured.

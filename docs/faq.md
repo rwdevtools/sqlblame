@@ -38,7 +38,22 @@ pools. It runs next to JaCoCo, IntelliJ's coverage and debugger, the OpenTelemet
 datasource-proxy and Spring Boot devtools restarts.
 
 Spring transaction names and Spring Batch job and step names are shown when those libraries are present. SQL Blame reads
-them without depending on them.
+them without depending on them. The transaction history (next question) covers Spring Framework 5.3 to 7, Hibernate
+5.6 to 7, Spring Batch 4 to 6, standalone JTA with Narayana or Atomikos, and CDI `@Transactional`.
+
+## Can I see which transaction a query ran in and how it ended?
+
+Yes. **Transaction** in a query's detail opens the transaction of the selected execution in a tab of its own, on
+the run's timeline: committed or rolled back and why, who opened it with which propagation, isolation and read-only
+setting, the methods that joined or suspended it, and its events in order. For Hibernate statements it adds the entity action (`UPDATE of Label #2 because
+name changed`), the call that scheduled it and the flush that sent it. The **Transactions** tab shows every
+transaction of a run on a timeline, one lane per thread, and a double-click on a bar filters Queries to it. Rules
+SB011-SB022 flag the usual traps: a rollback-only mark nobody expected, `@Transactional` that did not apply, a
+`LazyInitializationException`, writes after commit or outside the transaction, and more.
+
+It is on by default and can be switched off in Settings | Tools | SQL Blame, **Record transaction history**. Without
+Spring, every query still gets "committed" or "rolled back" from the connection's `commit()` and `rollback()`. The
+details, one section per common question, are on [transactions.md](transactions.md).
 
 ## What is not captured?
 
@@ -76,7 +91,9 @@ A run that is already running keeps its agent until it ends.
 
 About 40-50 microseconds per query and about 0.3-0.5 s per JVM start. Test suites against Postgres in Docker take
 about 7-10% longer, against a very fast local database about 10-20%. Runs without a JDBC driver do not get the
-agent. The full figures, with the machine they were measured on, are in the README section
+agent. The transaction history adds up to about 4 percentage points of test time in short test JVMs (see
+[transactions.md](transactions.md#cost)) and about 1.5-3% in an application that runs for a while. The
+full figures, with the machine they were measured on, are in the README section
 [Cost of the agent](../README.md#cost-of-the-agent).
 
 ## The query list says events were dropped
@@ -93,8 +110,9 @@ module or the guess is wrong, set the packages in Settings | Tools | SQL Blame |
 
 ## What do the markers in the Flags column mean?
 
-SQL Blame checks the captured queries against ten rules in the IDE, and the agent does no extra work for it. Each rule,
-why it matters, how to fix it and exactly when it fires is described in [rules.md](rules.md):
+SQL Blame checks the captured queries against 22 rules in the IDE, and the agent does no extra work for it. Each rule,
+why it matters, how to fix it and exactly when it fires is described in [rules.md](rules.md). SB011-SB022 judge
+transactions and need the transaction history (previous question).
 
 | Id | Rule | Severity |
 |---|---|---|
@@ -108,6 +126,18 @@ why it matters, how to fix it and exactly when it fires is described in [rules.m
 | SB008 | Large IN list: 100 or more elements | Minor |
 | SB009 | Lock wait / deadlock | Critical |
 | SB010 | SQL error | Major |
+| SB011 | Unexpected rollback: a participant marked the transaction rollback-only and the outer commit rolled it back | Critical |
+| SB012 | Write outside the transaction: a write in auto-commit while a Spring or JTA transaction or a Batch chunk was active | Major |
+| SB013 | `@Transactional` did not apply: the call bypassed the Spring proxy or the CDI interceptor | Major |
+| SB014 | Long transaction: open 5 s or longer | Major |
+| SB015 | Write in a read-only transaction | Minor |
+| SB016 | `REQUIRES_NEW` in a loop: 10 or more new transactions from one place inside one outer transaction | Minor |
+| SB017 | Committed despite an exception: the rollback rules let the transaction commit | Major |
+| SB018 | Lazy loading after the session closed (`LazyInitializationException`) | Major |
+| SB019 | Query outside the transaction (Open Session in View) | Minor |
+| SB020 | Write after commit: in an `afterCommit` / `afterCompletion` callback | Major |
+| SB021 | Unique violation from Hibernate's flush order | Major |
+| SB022 | Write in a task started inside a transaction (`@Async`, Spring executor or scheduler) | Major |
 
 Each rule can be turned off and the thresholds changed in Settings | Tools | SQL Blame | Rules. The agent reports the
 real database transactions (commit, rollback, auto-commit), so the rules count per transaction, also outside Spring.
@@ -208,17 +238,17 @@ are replaced with `***` inside the application for runs started afterwards, and 
 
 Select the run on the Processes tab and choose **Export Run...** (also next to the run selector on the Queries tab),
 or **Export All Runs...** for every listed run. SQL Blame writes a `.sqlblame` file with the captured executions of
-the run: SQL, parameter values, timings, row counts, errors, call paths, transaction and job / step context and
-execution plans, plus the run name, the JVM command, the Java version and, per database, a hash of its JDBC URL and
-user (never the password). Nothing else from the IDE or the project goes into the file.
+the run: SQL, parameter values, timings, row counts, errors, call paths, transaction and job / step context, the
+transaction history and execution plans, plus the run name, the JVM command, the Java version and, per database, a
+hash of its JDBC URL and user (never the password). Nothing else from the IDE or the project goes into the file.
 **Import Run...** on the Processes tab opens such a file, and its runs appear as `[imported] <name> - <date>`,
 read-only,
 with the rules computed by your current settings. Go to Caller works when the classes exist in the open project.
 Import needs a license or an active trial, like capturing. Export always works.
 
-The export dialog has **Mask parameter values**, which leaves every value out of the file, and the plans of
-executions that had values (a plan can contain them). SQL text and error
-messages are written as captured, and they can contain values too.
+The export dialog has **Mask parameter values**, which leaves every value out of the file, the plans of
+executions that had values (a plan can contain them), and the entity ids and exception messages of the transaction
+history. SQL text and error messages are written as captured, and they can contain values too.
 
 The file is compressed and scrambled so it cannot be read in a text editor, and a damaged or edited file is
 rejected. This is not encryption against a determined reader: anyone with the SQL Blame plugin can decode it. Treat
@@ -233,10 +263,9 @@ close the project are saved too.
 
 The history lives in the IDE's system directory under `sqlblame/history/`, one folder per project. Nothing is
 written into your project, so nothing ends up in version control. Each saved run holds what an exported run file
-holds (SQL, parameter values, timings, row counts, errors, call paths, transaction and job / step context, execution
-plans, run name, JVM command) in the same scrambled format. Parameter values are masked if **Mask parameter values** was
-on when the
-run was saved.
+holds (SQL, parameter values, timings, row counts, errors, call paths, transaction and job / step context, the
+transaction history, execution plans, run name, JVM command) in the same scrambled format. Parameter values are
+masked if **Mask parameter values** was on when the run was saved.
 
 By default a project keeps at most 100 runs and 1 024 MB, and the oldest runs go first. **Keep in History** in the
 Processes context menu protects a run from the run limit, but not from the disk limit.

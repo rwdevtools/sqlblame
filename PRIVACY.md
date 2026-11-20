@@ -8,7 +8,9 @@ the plugin does with data. It runs entirely on your computer, and there is no SQ
 While you run, debug or test an application, a small Java agent inside that application records the SQL statements
 it executes: the SQL text, the parameter values, the execution time, the number of rows, the calling code location,
 the thread and, when present, the Spring transaction and Spring Batch job and step. It also records the execution
-plans of the queries and the JDBC URL and user of the connections.
+plans of the queries and the JDBC URL and user of the connections. With the transaction history on (the default),
+it also records how transactions began and ended: names of classes, methods, transactions, entities, their
+properties and the tables they are mapped to, entity ids and exception messages (cut to 300 characters).
 
 ## Where it goes
 
@@ -25,7 +27,8 @@ plans of the queries and the JDBC URL and user of the connections.
   Settings | Tools | SQL Blame | Explain plans.
 
 **Mask parameter values** (Settings | Tools | SQL Blame) replaces every parameter value with `***` inside your
-application, so the values never reach the IDE.
+application, so the values never reach the IDE. It also leaves entity ids and exception messages out of the
+transaction history, since they can contain values.
 
 ## What leaves your computer
 
